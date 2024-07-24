@@ -10,7 +10,7 @@
 #include <string>
 #include <memory>
 
-#include "nav2_core/exceptions.hpp"
+#include "nav2_core/planner_exceptions.hpp"
 #include "nav2_util/node_utils.hpp"
 #include "nav2_pure_pursuit_controller/pure_pursuit_controller.hpp"
 #include "nav2_util/geometry_utils.hpp"
@@ -48,8 +48,8 @@ Iter min_by(Iter begin, Iter end, Getter getCompareVal)
 
 void PurePursuitController::configure(
   const rclcpp_lifecycle::LifecycleNode::WeakPtr & parent,
-  std::string name, const std::shared_ptr<tf2_ros::Buffer> tf,
-  const std::shared_ptr<nav2_costmap_2d::Costmap2DROS> costmap_ros)
+  std::string name, std::shared_ptr<tf2_ros::Buffer> tf,
+  std::shared_ptr<nav2_costmap_2d::Costmap2DROS> costmap_ros)
 {
   node_ = parent;
 

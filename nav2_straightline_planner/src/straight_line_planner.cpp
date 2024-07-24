@@ -41,7 +41,9 @@
 #include <cmath>
 #include <string>
 #include <memory>
+
 #include "nav2_util/node_utils.hpp"
+#include "nav2_core/planner_exceptions.hpp"
 
 #include "nav2_straightline_planner/straight_line_planner.hpp"
 
@@ -89,7 +91,8 @@ void StraightLine::deactivate()
 
 nav_msgs::msg::Path StraightLine::createPlan(
   const geometry_msgs::msg::PoseStamped & start,
-  const geometry_msgs::msg::PoseStamped & goal)
+  const geometry_msgs::msg::PoseStamped & goal,
+  std::function<bool()> cancel_checker)
 {
   nav_msgs::msg::Path global_path;
 
@@ -120,6 +123,9 @@ nav_msgs::msg::Path StraightLine::createPlan(
   double y_increment = (goal.pose.position.y - start.pose.position.y) / total_number_of_loop;
 
   for (int i = 0; i < total_number_of_loop; ++i) {
+    if (cancel_checker ())
+      throw nav2_core::PlannerCancelled("Planner was cancelled");
+
     geometry_msgs::msg::PoseStamped pose;
     pose.pose.position.x = start.pose.position.x + x_increment * i;
     pose.pose.position.y = start.pose.position.y + y_increment * i;
